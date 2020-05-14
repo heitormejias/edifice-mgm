@@ -1,0 +1,93 @@
+application {
+  config {
+    applicationType monolith
+    authenticationType jwt
+    baseName EdificeMGM
+    buildTool maven
+    cacheProvider no
+    clientFramework angularX
+    clientPackageManager npm
+    clientTheme none
+    creationTimestamp 1589382837712
+    databaseType sql
+    devDatabaseType h2Disk
+    dtoSuffix DTO
+    embeddableLaunchScript false
+    enableHibernateCache false
+    enableSwaggerCodegen false
+    enableTranslation true
+    jhiPrefix jhi
+    jhipsterVersion "6.8.0"
+    jwtSecretKey "YWY2M2IxNmU2MGUzMzA3ZGRiZmQ2NmIyOWUyZDU4NWNiYWUyNjFjMThhODA2NjhkZWU4MjNhN2U5ZTU3ZDc3MTk0YTg2NDc2MzdhZDBmYzNhOGVjYmI2NWEzYjYxNWI5NWY0MDM4MTM4NGQ2ZWQ1MjIwNjdhZTNlMzA1YmRiYTE="
+    languages [en, pt-br]
+    messageBroker false
+    nativeLanguage pt-br
+    otherModules []
+    packageName br.com.mejias.edificemgm
+    prodDatabaseType mysql
+    searchEngine false
+    serverPort 8080
+    serviceDiscoveryType false
+    skipClient false
+    skipServer false
+    skipUserManagement false
+    testFrameworks []
+    uaaBaseName ../uaa
+    useSass true
+    websocket false
+  }
+
+  entities Apartamento, Bloco, Espaco, EspacoLocado, Morador, VagaGaragem, Visita, Visitante
+}
+
+entity Apartamento {
+  nome String required
+}
+entity Bloco {
+  nome String required
+}
+entity Espaco {
+  nome String required
+}
+entity EspacoLocado {
+  dataInicio Instant required,
+  dataFim Instant required
+}
+entity Morador {
+  nome String required,
+  documento String,
+  ramal String
+}
+entity VagaGaragem {
+  nome String required,
+  placa String,
+  marca String,
+  modelo String,
+  tipo TipoVagaGaragem required
+}
+entity Visita {
+  dataVisita Instant required
+}
+entity Visitante {
+  nome String required,
+  documento String
+}
+enum TipoVagaGaragem {
+  PRIVADA,
+  PARTICULAR,
+  COMPARTILHADA
+}
+
+relationship OneToOne {
+  Apartamento{bloco(nome) required} to Bloco,
+  EspacoLocado{espaco(nome) required} to Espaco,
+  EspacoLocado{morador(nome) required} to Morador,
+  VagaGaragem{morador(nome)} to Morador,
+  VagaGaragem{locatario(nome)} to Morador,
+  Visita{visitante(nome) required} to Visitante,
+  Visita{apartamento(nome) required} to Apartamento
+}
+
+paginate Apartamento, EspacoLocado, VagaGaragem, Visita, Visitante, Morador with pagination
+service Apartamento, EspacoLocado, VagaGaragem, Visita, Visitante, Morador with serviceClass
+filter Visitante
